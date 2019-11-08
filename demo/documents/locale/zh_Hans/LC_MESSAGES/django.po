@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-07 19:54+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: demo/documents/apps.py:8 demo/documents/models.py:14
+msgid "Documents"
+msgstr "文件"
+
+#: demo/documents/models.py:6
+msgid "Name"
+msgstr "名称"
+
+#: demo/documents/models.py:7
+msgid "Picture"
+msgstr "图片"
+
+#: demo/documents/models.py:8
+msgid "File"
+msgstr "文件"
+
+#: demo/documents/models.py:9
+msgid "Text"
+msgstr "文本"
+
+#: demo/documents/models.py:10 demo/documents/models.py:23
+msgid "Url"
+msgstr ""
+
+#: demo/documents/models.py:13 demo/documents/models.py:24
+msgid "Document"
+msgstr "文献"
+
+#: demo/documents/models.py:27
+msgid "Link"
+msgstr ""
+
+#: demo/documents/models.py:28
+msgid "Links"
+msgstr ""
