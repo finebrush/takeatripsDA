@@ -49,25 +49,25 @@ class POIpointInline(admin.StackedInline):
 
 @register(City)
 class CityAdmin(LeafletGeoAdmin):
-    list_display = ('name', 'created', 'picture_tag', 'location')
+    list_display = ('name', 'titleko', 'titleeng', 'titleven', 'created', 'picture_tag', 'location')
     icon_name = 'location_city'
     search_fields = ('name',)
-    inlines = [InfoBasicInline, InfoTravelInline]
+    # inlines = [InfoBasicInline, InfoTravelInline]
 
     # form 안에 이미지 나타내기..
     def formfield_for_dbfield(self, db_field, **kwargs):
-        if db_field.name == 'picture':
+        if db_field.name == 'picture1' or db_field.name == 'picture2' or db_field.name == 'picture3' or db_field.name == 'picture4':
             kwargs.pop("request", None)
             kwargs['widget'] = AdminImageWidget
             return db_field.formfield(**kwargs)
         return super(CityAdmin,self).formfield_for_dbfield(db_field, **kwargs)
 
 
-@register(InfoBasic)
+# @register(InfoBasic)
 class InfoBasicAdmin(MaterialModelAdmin):
     icon_name = 'info'
     # autocomplete_fields = ('ibname', 'city')
-    list_display = ('ibname', 'city', 'ibtitle', 'ibrepicture_tag')
+    list_display = ('ibname', 'ibtitle', 'ibrepicture_tag')
 
     # form 안에 이미지 나타내기..
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -81,11 +81,11 @@ class InfoBasicAdmin(MaterialModelAdmin):
 class InfoTavelAdmin(LeafletGeoAdmin):
     icon_name = 'edit_location'
     # autocomplete_fields = ('ibname', 'city')
-    list_display = ('itname', 'city', 'itlocationname', 'itrepicture_tag', 'itlocation')
+    list_display = ('companyko', 'picture_tag', 'part', 'category', 'itlocation')
 
     # (2) Show thumbnail in changeview..form 에서 이미지 보여줌..
     def formfield_for_dbfield(self, db_field, **kwargs):
-        if db_field.name == 'itrepicture':
+        if db_field.name == 'picture1' or db_field.name == 'picture2' or db_field.name == 'picture3' or db_field.name == 'picture4':
             # remove request to avoid "__init__() got an unexpected keyword argument 'request'" error
             kwargs.pop("request", None)
             kwargs['widget'] = AdminImageWidget
@@ -95,14 +95,14 @@ class InfoTavelAdmin(LeafletGeoAdmin):
 @register(TravelCurator)
 class TravelCuratorAdmin(MaterialModelAdmin):
     form = TForm
-    list_display = ('tctitle', 'tcwritter', 'city')
+    list_display = ('tctitle', 'tcwritter')
     icon_name = 'departure_board'
     inlines = [TCImageInline]
 
 @register(TravelPlan)
 class TravelPlanAdmin(MaterialModelAdmin):
     icon_name = 'edit_location'
-    list_display = ('tpname', 'city', 'tpcomment')
+    list_display = ('tpname', 'tpcomment')
     inlines = [POIpointInline]
 
 @register(POIpoint)

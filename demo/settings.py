@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'demo.cities',
     'clientapp',
 
+    'manager',
+
     'django.contrib.gis',
     'taggit',
     'leaflet',
@@ -86,7 +88,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'demo.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

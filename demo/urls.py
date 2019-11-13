@@ -32,6 +32,7 @@ site.favicon = staticfiles('donut_large.png')
 
 urlpatterns = i18n_patterns(
     path('', include('clientapp.urls', namespace='clientend')),
+    path('manager/', include('manager.urls', namespace='manager')),
     path('admin/', include('material.admin.urls')),
     # path('', RedirectView.as_view(url='admin/', permanent=False), name='index'),
     path('tc-infotravel-autocomplete/', TCAutocomplete.as_view(), name='tc-infotravel-autocomplete'),
