@@ -1,10 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
 SELECT_PART = (
-    (1, _('먹다/마시다')),
-    (2, _('보다')),
-    (3, _('자다')),
-    (4, _('사다'))
+    ('Eat', _('먹다')),
+    ('Drink', _('마시다')),
+    ('See', _('보다')),
+    ('Sleep', _('자다')),
+    ('Buy', _('사다'))
 )
 
 SELECT_TYPE = (

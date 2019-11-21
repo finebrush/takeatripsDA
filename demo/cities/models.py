@@ -15,6 +15,8 @@ from django.utils.html import format_html
 from imagekit.models import ImageSpecField
 from imagekit.processors import Thumbnail
 
+from demo.common.models import CLarge, CMedium, CSmall
+
 class City(models.Model):
     name = models.CharField(_('Name'), max_length=64)
     titleko = models.CharField(_('소개타이틀(한국어)'), max_length=128)
@@ -53,9 +55,9 @@ class City(models.Model):
 class InfoBasic(models.Model):
     uuid = models.UUIDField(verbose_name=_('UUID number'), default=uuid.uuid4, editable=False)
     ibname = models.CharField(_('Name'), max_length=64)
-    # city = models.ForeignKey(
-    #     'cities.City', verbose_name=_('City'), on_delete=models.CASCADE, null=True, blank=True
-    # )
+    city = models.ForeignKey(
+        'cities.City', verbose_name=_('City'), on_delete=models.CASCADE, null=True, blank=True
+    )
 
     ibrepicture = models.ImageField(_('Re-Picture'), null=False, blank=False)
     photo_thumbnail = ImageSpecField(
@@ -97,6 +99,9 @@ class ThirdTaggedItem(GenericTaggedItemBase):
     tag = models.ForeignKey(ThirdTag, on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s_items",)
 
 class InfoTravel(models.Model):
+    city = models.ForeignKey(
+        'cities.City', verbose_name=_('City'), on_delete=models.CASCADE, null=True, blank=True
+    )
     companyko = models.CharField(_('업체명(한국어)'), max_length=64)
     companyeng = models.CharField(_('업체명(영어)'), max_length=64)
     companyven = models.CharField(_('업체명(베트남어)'), max_length=64)
@@ -104,12 +109,13 @@ class InfoTravel(models.Model):
     picture2 = models.ImageField(_('Picture2'), null=True, blank=True)
     picture3 = models.ImageField(_('Picture2'), null=True, blank=True)
     picture4 = models.ImageField(_('Picture2'), null=True, blank=True)
-    part = models.CharField(_('구분'), choices=SELECT_PART, max_length=8)
-    type = models.CharField(_('유형선택'), choices=SELECT_TYPE, max_length=8)
+    part = models.CharField(_('구분'), max_length=64, choices=SELECT_PART)
+    typeit = models.IntegerField(_('유형선택'), choices=SELECT_TYPE)
     addressko = models.CharField(_('주소(한국어)'), max_length=128)
     addresseng = models.CharField(_('주소(영어)'), max_length=128)
     addressven = models.CharField(_('주소(베트남어)'), max_length=128)
-    category = models.CharField(_('카테고리'), choices=SELECT_CATEGORY, max_length=8)
+    category = models.ForeignKey(CSmall, on_delete=models.CASCADE)
+    # category = models.CharField(_('카테고리'), choices=SELECT_CATEGORY, max_length=8)
     linkweb = models.CharField(_('외부링크(웹사이트)'), max_length=64, null=True, blank=True)
     linkinsta = models.CharField(_('외부링크(인스타그램)'), max_length=64, null=True, blank=True)
     linkyoutube = models.CharField(_('외부링크(유튜브)'), max_length=64, null=True, blank=True)
@@ -120,11 +126,8 @@ class InfoTravel(models.Model):
     introeng = models.TextField(_('소개정보(영어)'), null=True, blank=True, help_text=_('이곳을 소개해 주세요.'))
     introven = models.TextField(_('소개정보(베트남어)'), null=True, blank=True, help_text=_('이곳을 소개해 주세요.'))
     tagko = TaggableManager(_('태그(한국어)'))
-    # tagko.related_name = "+"
     tageng = TaggableManager(_('태그(영어)'), through=SecondTaggedItem)
-    # tageng.related_name = "+"
     tagven = TaggableManager(_('태그(베트남어)'), through=ThirdTaggedItem)
-    # tagven.related_name = "+"
     
     # thumbnail 만들기..
     photo_thumbnail = ImageSpecField(
@@ -151,6 +154,39 @@ class InfoTravel(models.Model):
 
     def __str__(self):
         return self.companyko
+
+class EatDrinkPart(models.Model):
+    part = models.OneToOneField('InfoTravel', on_delete=models.CASCADE)
+    biztimeko = models.CharField(_('영업시간(한국어)'), max_length=64)
+    biztimeeng = models.CharField(_('영업시간(영어)'), max_length=64)
+    biztimeven = models.CharField(_('영업시간(베트남어)'), max_length=64)
+    menuko = models.CharField(_('대표메뉴(한국어)'), max_length=64)
+    menueng = models.CharField(_('대표메뉴(영어)'), max_length=64)
+    menuven = models.CharField(_('대표메뉴(베트남어)'), max_length=64)
+
+class SeePart(models.Model):
+    part = models.OneToOneField('InfoTravel', on_delete=models.CASCADE)
+    operationtimeko = models.CharField(_('운영시간(한국어)'), max_length=64)
+    operationtimeeng = models.CharField(_('운영시간(영어)'), max_length=64)
+    operationtimeven = models.CharField(_('운영시간(베트남어)'), max_length=64)
+
+class SleepPart(models.Model):
+    part = models.OneToOneField('InfoTravel', on_delete=models.CASCADE)
+    inclusionko = models.CharField(_('포함사항(한국어)'), max_length=64)
+    inclusioneng = models.CharField(_('포함사항(영어)'), max_length=64)
+    inclusionven = models.CharField(_('포함사항(베트남어)'), max_length=64)
+    roomtypeko = models.CharField(_('객실타입(한국어)'), max_length=64)
+    roomtypeeng = models.CharField(_('객실타입(영어)'), max_length=64)
+    roomtypeven = models.CharField(_('객실타입(베트남어)'), max_length=64)
+
+class BuyPart(models.Model):
+    part = models.OneToOneField('InfoTravel', on_delete=models.CASCADE)
+    biztimeko = models.CharField(_('영업시간(한국어)'), max_length=64)
+    biztimeeng = models.CharField(_('영업시간(영어)'), max_length=64)
+    biztimeven = models.CharField(_('영업시간(베트남어)'), max_length=64)
+    saleitemsko = models.CharField(_('판매상품(한국어)'), max_length=64)
+    saleitemseng = models.CharField(_('판매상품(영어)'), max_length=64)
+    saleitemsven = models.CharField(_('판매상품(베트남어)'), max_length=64)
 
 class TravelCurator(models.Model):
     # tcname = models.CharField(_('Name'), max_length=64)

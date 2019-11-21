@@ -1,5 +1,9 @@
 from django import forms
-from demo.cities.models import City, InfoBasic, InfoTravel, TravelCurator, TCImage, TravelPlan, POIpoint
+from django.forms.models import inlineformset_factory
+
+from demo.cities.models import ( City, InfoBasic, InfoTravel, TravelCurator, 
+								TCImage, TravelPlan, POIpoint,
+								EatDrinkPart, SeePart, SleepPart, BuyPart )
 
 from dal import autocomplete
 from mapwidgets.widgets import GooglePointFieldWidget
@@ -21,3 +25,10 @@ class TForm(forms.ModelForm):
 # 		widgets = {
 #             'point': GooglePointFieldWidget,
 #         }
+
+# class CityForm(forms.ModelForm):
+# 	layout = Layout('name', 'titleko', 'titleeng', 'titleven', 'created',
+# 				Row('picture1', 'picture2', 'picture3', 'picture4'),
+# 				Fieldset('location pick', 'location'))
+# 	class Meta:
+# 		model = City

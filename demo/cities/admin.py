@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib.gis.db import models
 # import os
-from demo.cities.models import City, InfoBasic, InfoTravel, TravelCurator, TCImage, TravelPlan, POIpoint, NewMultiPoint
+from demo.cities.models import ( City, InfoBasic, InfoTravel, TravelCurator, 
+                                TCImage, TravelPlan, POIpoint, NewMultiPoint, 
+                                EatDrinkPart, SeePart, SleepPart, BuyPart ) 
+
 from material.admin.decorators import register
 from material.admin.options import MaterialModelAdmin
 from imagekit.admin import AdminThumbnail
@@ -20,6 +23,26 @@ CUSTOM_MAP_SETTINGS = {
         ("mapCenterLocation", [37.59675, 126.99488]),
     ),
 }
+
+class EatDrinkPartInline(admin.StackedInline):
+    model = EatDrinkPart
+    extra = 1
+    can_delete = False
+
+class SeePartInline(admin.StackedInline):
+    model = SeePart
+    extra = 1
+    can_delete = False
+
+class SleepPartInline(admin.StackedInline):
+    model = SleepPart
+    extra = 1
+    can_delete = False
+
+class BuyPartInline(admin.StackedInline):
+    model = BuyPart
+    extra = 1
+    can_delete = False
 
 class InfoBasicInline(admin.StackedInline):
     model = InfoBasic
@@ -52,7 +75,18 @@ class CityAdmin(LeafletGeoAdmin):
     list_display = ('name', 'titleko', 'titleeng', 'titleven', 'created', 'picture_tag', 'location')
     icon_name = 'location_city'
     search_fields = ('name',)
+    list_per_page = 10
     # inlines = [InfoBasicInline, InfoTravelInline]
+
+    # 표시할 필드 순서.. 넣지않으면 나타나지 않음..
+    # fields = ['name', 'created', 'titleko', 'titleeng', 'titleven', 'location']
+
+    # 각 필드를 구분하는 대표제목을 설정한다. (리스트 내 튜플)
+    fieldsets = [
+        ('기본 정보',   {'fields': ['name', 'created','titleko', 'titleeng', 'titleven']}),
+        ('대표 이미지',  {'fields': ['picture1', 'picture2', 'picture3', 'picture4']}),
+        ('위치',       {'fields': ['location']}),
+    ]
 
     # form 안에 이미지 나타내기..
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -68,6 +102,7 @@ class InfoBasicAdmin(MaterialModelAdmin):
     icon_name = 'info'
     # autocomplete_fields = ('ibname', 'city')
     list_display = ('ibname', 'ibtitle', 'ibrepicture_tag')
+    search_fields = ('ibname',)
 
     # form 안에 이미지 나타내기..
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -82,6 +117,19 @@ class InfoTavelAdmin(LeafletGeoAdmin):
     icon_name = 'edit_location'
     # autocomplete_fields = ('ibname', 'city')
     list_display = ('companyko', 'picture_tag', 'part', 'category', 'itlocation')
+    search_fields = ('companyko', 'companyeng', 'companyven',)
+    inlines = [EatDrinkPartInline, SeePartInline, SleepPartInline, BuyPartInline,]
+    list_per_page = 10
+    list_filter = ('part',)
+
+    fieldsets = [
+        ('기본 정보',   {'fields': ['city', 'itdate', 'companyko', 'companyeng', 'companyven']}),
+        ('대표 이미지',  {'fields': ['picture1', 'picture2', 'picture3', 'picture4'], 'classes': ['collapse']}),
+        ('일반 정보',  {'fields': ['part', 'typeit', 'addressko', 'addresseng','addressven', 'category',
+                                    'linkweb', 'linkinsta', 'linkyoutube', 'trafficko', 'trafficeng', 'trafficven',
+                                    'introko', 'introeng', 'introven', 'tagko', 'tageng', 'tagven'], 'classes': ['collapse']}),
+        ('위치',       {'fields': ['itlocation']}),
+    ]
 
     # (2) Show thumbnail in changeview..form 에서 이미지 보여줌..
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -91,6 +139,12 @@ class InfoTavelAdmin(LeafletGeoAdmin):
             kwargs['widget'] = AdminImageWidget
             return db_field.formfield(**kwargs)
         return super(InfoTavelAdmin,self).formfield_for_dbfield(db_field, **kwargs)
+
+    class Media:
+        js = (
+                'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
+                '/static/admin/js/fbinlineonoff.js',
+            )
 
 @register(TravelCurator)
 class TravelCuratorAdmin(MaterialModelAdmin):

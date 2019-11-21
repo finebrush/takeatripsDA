@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     # 'demo.periods',
     'demo.profile',
     'demo.cities',
+    # 'demo.airport',
+    'demo.common',
     'clientapp',
 
     'manager',
@@ -57,6 +59,7 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'mapwidgets',
+    'smart_selects',
 ]
 
 MIDDLEWARE = [
@@ -95,7 +98,7 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'takeatrips', #Name of the database
+        'NAME': 'takebo', #Name of the database
         'USER': 'finebrush', #Name of the user
         'HOST': 'localhost', #Change if the database lives in a system different from your local system. 'PASSWORD': 'xxxxxxx',
         'PORT': '5432',

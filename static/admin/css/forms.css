@@ -230,7 +230,7 @@ fieldset.collapsed h2 {
 }
 
 fieldset .collapse-toggle {
-    color: #fff;
+    color: #666;
 }
 
 fieldset.collapsed .collapse-toggle {
