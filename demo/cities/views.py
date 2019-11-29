@@ -1,6 +1,7 @@
 from dal import autocomplete
 
 from demo.cities.models import City, InfoBasic, InfoTravel, TravelCurator, TCImage
+from demo.common.models import CSmall
 
 class TCAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -11,6 +12,14 @@ class TCAutocomplete(autocomplete.Select2QuerySetView):
         qs = InfoTravel.objects.all()
 
         if self.q:
-            qs = qs.filter(itname__contains=self.q)
+            qs = qs.filter(companyko__contains=self.q)
+
+        return qs
+
+class CSAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = CSmall.objects.all()
+        if self.q:  # cs-name-autocomplete/?q= 와 같은..
+            qs = qs.filter(name__contains=self.q)
 
         return qs

@@ -2,20 +2,23 @@ from django.contrib import admin
 from django.contrib.gis.db import models
 # import os
 from demo.cities.models import ( City, InfoBasic, InfoTravel, TravelCurator, 
-                                TCImage, TravelPlan, POIpoint, NewMultiPoint, 
+                                TCImage, TravelPlan, POIpoint, PointImage, NewMultiPoint, 
                                 EatDrinkPart, SeePart, SleepPart, BuyPart ) 
 
 from material.admin.decorators import register
 from material.admin.options import MaterialModelAdmin
 from imagekit.admin import AdminThumbnail
 from .widgets import AdminImageWidget
-from .forms import TForm
+from .forms import TForm, CSForm# , TravelCuratorForm, InfoTravelForm, 
 from django.contrib.admin.options import FORMFIELD_FOR_DBFIELD_DEFAULTS
 from django.contrib.gis import admin
 
 from leaflet.admin import LeafletGeoAdmin
 
 from mapwidgets.widgets import GooglePointFieldWidget, GooglePointFieldInlineWidget
+
+from material.base import Layout, Row, Column, Fieldset
+from fieldsets_with_inlines import FieldsetsInlineMixin
 
 CUSTOM_MAP_SETTINGS = {
     "GooglePointFieldWidget": (
@@ -59,6 +62,11 @@ class TCImageInline(admin.StackedInline):
     ordering = ('id',)
     extra = 0
 
+class PointImageInline(admin.StackedInline):
+    model = PointImage
+    ordering = ('id',)
+    extra = 0
+
 class POIpointInline(admin.StackedInline):
     model = POIpoint
     ordering = ('id',)
@@ -70,8 +78,13 @@ class POIpointInline(admin.StackedInline):
         models.PointField: {"widget": GooglePointFieldInlineWidget}
     }
 
+class NewMultiPointInline(admin.StackedInline):
+    model = NewMultiPoint
+    ordering = ('id',)
+    extra = 0
+    
 @register(City)
-class CityAdmin(LeafletGeoAdmin):
+class CityAdmin(MaterialModelAdmin):
     list_display = ('name', 'titleko', 'titleeng', 'titleven', 'created', 'picture_tag', 'location')
     icon_name = 'location_city'
     search_fields = ('name',)
@@ -87,6 +100,10 @@ class CityAdmin(LeafletGeoAdmin):
         ('대표 이미지',  {'fields': ['picture1', 'picture2', 'picture3', 'picture4']}),
         ('위치',       {'fields': ['location']}),
     ]
+
+    formfield_overrides = {
+        models.PointField: {"widget": GooglePointFieldWidget(settings=CUSTOM_MAP_SETTINGS)}
+    }
 
     # form 안에 이미지 나타내기..
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -113,7 +130,8 @@ class InfoBasicAdmin(MaterialModelAdmin):
         return super(InfoBasicAdmin,self).formfield_for_dbfield(db_field, **kwargs)
 
 @register(InfoTravel)
-class InfoTavelAdmin(LeafletGeoAdmin):
+class InfoTavelAdmin(MaterialModelAdmin):
+    # form = CSForm
     icon_name = 'edit_location'
     # autocomplete_fields = ('ibname', 'city')
     list_display = ('companyko', 'picture_tag', 'part', 'category', 'itlocation')
@@ -131,6 +149,10 @@ class InfoTavelAdmin(LeafletGeoAdmin):
         ('위치',       {'fields': ['itlocation']}),
     ]
 
+    formfield_overrides = {
+        models.PointField: {"widget": GooglePointFieldWidget(settings=CUSTOM_MAP_SETTINGS)}
+    }
+
     # (2) Show thumbnail in changeview..form 에서 이미지 보여줌..
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'picture1' or db_field.name == 'picture2' or db_field.name == 'picture3' or db_field.name == 'picture4':
@@ -147,30 +169,56 @@ class InfoTavelAdmin(LeafletGeoAdmin):
             )
 
 @register(TravelCurator)
-class TravelCuratorAdmin(MaterialModelAdmin):
+class TravelCuratorAdmin(FieldsetsInlineMixin, MaterialModelAdmin):
     form = TForm
-    list_display = ('tctitle', 'tcwritter')
+    # form = TravelCuratorForm
+    list_display = ('titleko', 'created')
     icon_name = 'departure_board'
-    inlines = [TCImageInline]
+    # inlines = [TCImageInline]
+    fieldsets_with_inlines = [
+        ('기본정보', {'fields': ['city', 'titleko', 'titleeng', 'titleven', 'created', 'writter']}),
+        # ('대표이미지', {'fields': ['picture1', 'picture2', 'picture3', 'picture4']}),
+        TCImageInline,
+        ('일반정보', {'fields': ['introko', 'introeng', 'introven', 'tagko', 'tageng', 'tagven']}),
+        ('여행장소', {'fields': ['infotravel',]})
+    ]
+@register(TCImage)
+class TCImageAdmin(MaterialModelAdmin):
+    icon_name = 'edit_location'
+    list_display = ('travelcurator', 'picture_tag')
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'tcimg':
+            # remove request to avoid "__init__() got an unexpected keyword argument 'request'" error
+            kwargs.pop("request", None)
+            kwargs['widget'] = AdminImageWidget
+            return db_field.formfield(**kwargs)
+        return super(TCImageAdmin,self).formfield_for_dbfield(db_field, **kwargs)
 
 @register(TravelPlan)
 class TravelPlanAdmin(MaterialModelAdmin):
     icon_name = 'edit_location'
-    list_display = ('tpname', 'tpcomment')
+    list_display = ('titleko', 'inlinecount', 'created')
     inlines = [POIpointInline]
 
 @register(POIpoint)
 class POIpointAdmin(MaterialModelAdmin):
     icon_name = 'edit_location'
-    list_display = ('pname', 'point')
+    list_display = ('pnameko', 'point')
     formfield_overrides = {
         models.PointField: {"widget": GooglePointFieldWidget(settings=CUSTOM_MAP_SETTINGS)}
     }
 
-@register(NewMultiPoint)
+# @register(PointImage)
+class PointImageAdmin(MaterialModelAdmin):
+    icon_name = 'edit_location'
+    list_display = ('picture_tag',)
+
+# @register(NewMultiPoint)
 class NewMultiPointAdmin(LeafletGeoAdmin):
     icon_name = 'edit_location'
     list_display = ('name', 'nmp')
+    
 
 # @register(Location)
 # class LocationAdmin(MaterialModelAdmin):

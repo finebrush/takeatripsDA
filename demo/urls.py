@@ -24,7 +24,7 @@ from django.contrib.staticfiles.templatetags.staticfiles import static as static
 
 from material.admin.sites import site
 
-from demo.cities.views import TCAutocomplete
+from demo.cities.views import TCAutocomplete, CSAutocomplete
 
 site.site_header = _('T-A-T')
 site.site_title = _('TaT')
@@ -37,6 +37,13 @@ urlpatterns = i18n_patterns(
     path('admin/', include('material.admin.urls')),
     # path('', RedirectView.as_view(url='admin/', permanent=False), name='index'),
     path('tc-infotravel-autocomplete/', TCAutocomplete.as_view(), name='tc-infotravel-autocomplete'),
+    path('cs-name-autocomplete/', CSAutocomplete.as_view(), name='cs-name-autocomplete'),
     path('chaning/', include('smart_selects.urls')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

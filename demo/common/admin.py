@@ -5,7 +5,7 @@ from .models import Category, CLarge, CMedium, CSmall, TmpTest, TmpAdd
 from material.admin.decorators import register
 from material.admin.options import MaterialModelAdmin
 
-@register(Category)
+# @register(Category)
 class CategoryAdmin(MaterialModelAdmin):
     list_display = ('large', 'medium', 'small')
     icon_name = 'library_books'
@@ -13,15 +13,15 @@ class CategoryAdmin(MaterialModelAdmin):
     list_per_page = 10
 
 @register(CLarge)
-class ContinentAdmin(MaterialModelAdmin):
+class CLargeAdmin(MaterialModelAdmin):
     list_display = ('name',)
 
 @register(CMedium)
-class CountryAdmin(MaterialModelAdmin):
+class CMediumAdmin(MaterialModelAdmin):
     list_display = ('categorylarge', 'name',)
 
 @register(CSmall)
-class LocationAdmin(MaterialModelAdmin):
+class CSmallAdmin(MaterialModelAdmin):
     list_display = ('categorylarge', 'categorymedium', 'name',)
 
 class TmpAddInline(admin.TabularInline):
@@ -29,7 +29,7 @@ class TmpAddInline(admin.TabularInline):
     ordering = ('id',)
     extra = 1
 
-@register(TmpTest)
+# @register(TmpTest)
 class TmpTestAdmin(MaterialModelAdmin):
     list_display = ('choices1','choicesel',)
     if TmpTest.choicesel == '1':

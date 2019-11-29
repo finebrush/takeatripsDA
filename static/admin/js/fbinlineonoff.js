@@ -96,4 +96,23 @@ $(document).ready( function() {
     // $("input").click( function(event) {
     //     alert("You clicked the button using JQuery!");
     // });
+
+//     $(document).ready(function(){
+//         $.ajax({
+//             type : "GET",
+//             url : 'http://127.0.0.1:8000/en/cs-name-autocomplete/',
+//             dataType : 'json',
+//             error : function(){
+//                 alert('통신실패!!');
+//             },
+//             success : function(data){
+// //                 alert("통신데이터 값 : " + data) ;
+// //                 $("#dataArea").html(data) ;
+//                 console.log(data);
+//                 console.log(data.results[0].text);
+//             }
+//         });
+//      });
+
+        
 });

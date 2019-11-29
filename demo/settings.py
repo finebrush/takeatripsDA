@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# 이 아이피에서만 디버그 툴바가 보인다.
+INTERNAL_IPS = ('127.0.0.1',)
 
 # Application definition
 
@@ -60,6 +62,8 @@ INSTALLED_APPS = [
     'dal_select2',
     'mapwidgets',
     'smart_selects',
+    'debug_toolbar',
+    'fieldsets_with_inlines',    
 ]
 
 MIDDLEWARE = [
@@ -71,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'demo.urls'
@@ -173,6 +178,9 @@ SITE_ID = 1
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
+
+USE_DJANGO_JQUERY = False
+JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'demo/locale')

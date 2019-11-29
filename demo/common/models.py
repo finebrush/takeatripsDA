@@ -29,17 +29,18 @@ class CMedium(models.Model):
         return self.name
 
 class CSmall(models.Model):
+    objects = models.Manager()
     categorylarge = models.ForeignKey(CLarge, on_delete=models.CASCADE)
-    categorymedium = GroupedForeignKey(CMedium, "categorylarge")
-    # category_small = ChainedForeignKey(
-    #     CMedium, # 연결 할 모델..
-    #     chained_field="categorylarge", # 연결 할 자신의 필드..
-    #     chained_model_field="categorylarge", # 연결 할 모델의 필드..
-    #     show_all=False,
-    #     auto_choose=True,
-    #     sort=True,
-    #     null=True
-    #     )
+    # categorymedium = GroupedForeignKey(CMedium, "categorylarge")
+    categorymedium = ChainedForeignKey(
+        CMedium, # 연결 할 모델..
+        chained_field="categorylarge", # 연결 할 자신의 필드..
+        chained_model_field="categorylarge", # 연결 할 모델의 필드..
+        show_all=False,
+        auto_choose=True,
+        sort=True,
+        null=True
+        )
     # area = ForeignKey(Area, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     # street = models.CharField(max_length=100)
