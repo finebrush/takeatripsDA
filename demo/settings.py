@@ -16,7 +16,6 @@ from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -42,6 +41,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.gis',
+
+    'smart_selects',
+    'taggit',
+    'leaflet',
+    'dal',
+    'dal_select2',
+    'mapwidgets',
+    'debug_toolbar',
+    'fieldsets_with_inlines',  
 
     # 'demo.countries',
     'demo.documents',
@@ -53,17 +62,7 @@ INSTALLED_APPS = [
     'demo.common',
     'clientapp',
 
-    'manager',
-
-    'django.contrib.gis',
-    'taggit',
-    'leaflet',
-    'dal',
-    'dal_select2',
-    'mapwidgets',
-    'smart_selects',
-    'debug_toolbar',
-    'fieldsets_with_inlines',    
+    'manager',  
 ]
 
 MIDDLEWARE = [
